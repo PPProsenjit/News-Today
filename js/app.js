@@ -4,6 +4,7 @@ const loadAllCategories = async () => {
     const data = await res.json();
     displayCategories(data.data.news_category);
 }
+
 const displayCategories = (categories) => {
     const categoryContainer = document.getElementById('category-container');
     categories.forEach(category => {
@@ -17,19 +18,26 @@ const displayCategories = (categories) => {
     })
 
 }
-const selectCategory = async (value) => {
+const selectCategory = async (id, element) => {
     try {
-        const category = `https://openapi.programming-hero.com/api/news/category/${value}`
+        const category = `https://openapi.programming-hero.com/api/news/category/${id}`
         const res = await fetch(category)
         const data = await res.json();
-        displayCategriOne(data.data);
-
+        showCardCat(data.data, element);
     } catch (e) {
-        console.log("error");
+        console.log("error!");
 
     }
+}
 
-
+const showCardCat = (data, element) =>{
+    const newses = [];
+    for(const news of data){
+        newses.push(news);
+    }
+    newses.sort((x,y) => y.total_view-x.total_view);
+    data = newses;
+    displayCategriOne(data, element);
 }
 const showcard = (category_id) => {
     loadingSpinner(true);
@@ -37,17 +45,21 @@ const showcard = (category_id) => {
 
 }
 
-const displayCategriOne = (data) => {
+const displayCategriOne = (data, element) => {
     const cardContainer = document.getElementById('news-conatainer');
     const footerAdd = document.getElementById('footer');
+    const errorNews = document.getElementById('error-found');
     cardContainer.textContent = ``;
+    
     const v = data.length;
     if (v > 1) {
         footerAdd.classList.remove('d-none');
-
+        errorNews.classList.remove('d-none');
     }
     else {
+        errorNews.textContent = ``;
         footerAdd.classList.add('d-none');
+        
     }
 
     const valueInput = document.getElementById('selective-input');
@@ -63,55 +75,59 @@ const displayCategriOne = (data) => {
         div.classList.add('col')
 
         div.innerHTML = `
-        <div class="card h-100 d-flex flex-row p-3  ">
-                    
-        <img id= "card-image" src="${thumbnail_url ? thumbnail_url : "Not Found"}" class="flex-shrink-0 me-3 " alt="...">
-        <div class="card-body col-sm-8 mx-3">
-          <h5 class="card-title">${title ? title : 'Not Found'}</h5>
-          <p class="card-text">${details ? details.slice(0, 500) + "..." : "Not Found"}</p>
-          <div class= "d-flex justify-content-between align-items-center pt-4 ">
+        <div class="col">
+        <div class="card p-2 h-100 d-flex flex-md-row flex-sm-column">
+            <img src="${thumbnail_url}" class="sm-w-100 md-w-50 rounded-start" alt="...">
+            <div class="card-body mx-3">
+            <h5 class="card-title">${title ? title : 'Not Found'}</h5>
+        <p class="card-text">${details ? details.slice(0, 500) + "..." : "Not Found"}</p>
+            <div class="d-flex justify-content-between align-items-center pt-4 ">
 
-          <div class= "d-flex flex-row "> 
-                    
-                    <div>
-                    <img id="image-prof" src="${img ? img : 'Not Found'}" class="rounded-circle img-fluid img-size" alt="...">
-                    </div>
-                        
+            <div class="d-flex flex-row ">
+                <div>
+                    <img id="profile-image" src="${img ? img : 'Not Found'}" class="rounded-circle img-fluid img-size" alt="...">
+                </div>
 
-                    <div class = "px-2">
-                        <h6>${name ? name : 'not found'}</h6>
-                        <h6 class = "text-black-50">${published_date ? published_date : 'not found'}</h6>
+                <div class="px-2">
+                    <h6>${name ? name : 'not found'}</h6>
+                    <h6 class="text-black-50">${published_date ? published_date : 'not found'}</h6>
 
-                    </div>
+                </div>
 
-          </div>
-          
+            </div>
 
-          <div>
-             <h6><i class="fa-regular fa-eye"></i> ${total_view ? total_view : 'not found'} M</h6>
 
-          </div>
-          <div>
-          <h6>${number ? number : 'not found'}</h6>
+            <div>
+                <h6><i class="fa-regular fa-eye"></i> ${total_view ? total_view : 'not found'}</h6>
 
-          </div>
-          <div>
-                    <i class="fa-solid text-warning fa-star"></i>
-                    <i class="fa-solid text-warning fa-star"></i>
-                    <i class="fa-solid text-warning fa-star"></i>
-                    <i class="fa-solid text-warning fa-star"></i>
-                    <i class="fa-solid text-warning fa-star-half-stroke"></i>
+            </div>
+            <div>
+                <h6>${number ? number : 'not found'}</h6>
 
-          </div>
+            </div>
+            <div>
+                <i class="fa-solid text-warning fa-star"></i>
+                <i class="fa-solid text-warning fa-star"></i>
+                <i class="fa-solid text-warning fa-star"></i>
+                <i class="fa-solid text-warning fa-star"></i>
+                <i class="fa-solid text-warning fa-star-half-stroke"></i>
 
-          <div onclick = "loadModel('${_id}')" data-bs-toggle="modal" data-bs-target="#portalModal">
-          <i class="fa-solid fa-arrow-right text-primary"></i>
-          </div>  
+            </div>
+
+            <div onclick="modalFunction('${_id}')" data-bs-toggle="modal" data-bs-target="#portalModal">
+                <i class="fa-solid fa-arrow-right text-primary"></i>
+            </div>
+
+
+
 
         </div>
+
+            </div>
+            
+            </div>
         </div>
-        
-      </div>
+    </div>
       `
         cardContainer.appendChild(div);
     });
