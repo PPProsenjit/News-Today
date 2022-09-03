@@ -48,23 +48,19 @@ const showcard = (category_id) => {
 const displayCategriOne = (data, element) => {
     const cardContainer = document.getElementById('news-conatainer');
     const footerAdd = document.getElementById('footer');
-    const errorNews = document.getElementById('error-found');
     cardContainer.textContent = ``;
     
-    const v = data.length;
-    if (v > 1) {
+    const listLength = data.length;
+    if (listLength > 1) {
         footerAdd.classList.remove('d-none');
-        errorNews.classList.remove('d-none');
     }
     else {
-        errorNews.textContent = ``;
-        footerAdd.classList.add('d-none');
-        
-    }
 
+        footerAdd.classList.add('d-none');
+    }
     const valueInput = document.getElementById('selective-input');
     valueInput.innerHTML = `
-    <h5>${v} Items Found</h5>`
+    <h5>${listLength} Items Found</h5>`
 
     data.forEach(element => {
         // console.log(element);
