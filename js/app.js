@@ -104,7 +104,7 @@ const displayCategriOne = (data) => {
 
           </div>
 
-          <div onclick = "modalFunction('${_id}')" data-bs-toggle="modal" data-bs-target="#portalModal">
+          <div onclick = "loadModel('${_id}')" data-bs-toggle="modal" data-bs-target="#portalModal">
           <i class="fa-solid fa-arrow-right text-primary"></i>
           </div>  
 
@@ -131,7 +131,7 @@ const loadModel = async (news_id) => {
         const category = `https://openapi.programming-hero.com/api/news/${news_id}`
         const res = await fetch(category)
         const data = await res.json();
-        modalAdd(data.data[0]);
+        displayModel(data.data[0]);
 
     } catch (e) {
         console.log("error");
@@ -139,6 +139,29 @@ const loadModel = async (news_id) => {
     }
 
 }
+const displayModel = (data) =>{
+    const {author} = data;
+    const {img, name} =author;
+    const modalAdd = document.getElementById('add-model');
+    modalAdd.textContent = '';
+    const div = document.createElement('div');
+    div.classList.add('col');
+    div.innerHTML = `
+    <div class="card h-100 justify-content-center align-items-center p-3  ">
+                    
+        <img id= "card-image" src="${img}" class="card-img-top " alt="...">
+        <div class="card-body mx-3">
+          <h5 class="card-title">Author Name :${name ? name : 'Name not found'}</h5>
+          <p class="card-text">${data.details}</p>
+          
+        </div>
+        
+      </div>`
+    modalAdd.appendChild(div);
+}
+// const readblogs = () =>{
+//     const getblog = document.getElementById('read-blogs');
+// }
 
 selectCategory();
 loadAllCategories();
