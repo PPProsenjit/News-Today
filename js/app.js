@@ -25,7 +25,7 @@ const selectCategory = async (value) => {
         displayCategriOne(data.data);
 
     } catch (e) {
-        console.log("some error");
+        console.log("error");
 
     }
 
@@ -126,6 +126,20 @@ const loadingSpinner = (isload) => {
         load.classList.add('d-none');
     }
 }
+const loadModel = async (news_id) => {
+    try {
+        const category = `https://openapi.programming-hero.com/api/news/${news_id}`
+        const res = await fetch(category)
+        const data = await res.json();
+        modalAdd(data.data[0]);
+
+    } catch (e) {
+        console.log("error");
+
+    }
+
+}
+
 selectCategory();
 loadAllCategories();
 
