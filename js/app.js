@@ -1,23 +1,23 @@
-const loadAllCategories = async() =>{
+const loadAllCategories = async () => {
     const url = `https://openapi.programming-hero.com/api/news/categories`
     const res = await fetch(url);
     const data = await res.json();
     displayCategories(data.data.news_category);
 }
-const displayCategories = (categories) =>{
+const displayCategories = (categories) => {
     const categoryContainer = document.getElementById('category-container');
-   categories.forEach(category =>{
-    const {category_name, category_id} = category;
-    const categoryDiv = document.createElement('div');
-    categoryDiv.classList.add('col');
-    categoryDiv.innerHTML = `
+    categories.forEach(category => {
+        const { category_name, category_id } = category;
+        const categoryDiv = document.createElement('div');
+        categoryDiv.classList.add('col');
+        categoryDiv.innerHTML = `
     <a class = 'btn' onclick="showcard('${category_id}')">${category_name}</a>
     `
-    categoryContainer.appendChild(categoryDiv);
-   })
+        categoryContainer.appendChild(categoryDiv);
+    })
 
 }
-const selectCategory= async (value) => {
+const selectCategory = async (value) => {
     try {
         const category = `https://openapi.programming-hero.com/api/news/category/${value}`
         const res = await fetch(category)
@@ -33,7 +33,7 @@ const selectCategory= async (value) => {
 }
 const showcard = (category_id) => {
     loadingSpinner(true);
-    categorieOne(category_id);
+    selectCategory(category_id);
 
 }
 
@@ -65,16 +65,18 @@ const displayCategriOne = (data) => {
         div.innerHTML = `
         <div class="card h-100 d-flex flex-row p-3  ">
                     
-        <img id= "card-image" src="${thumbnail_url ? thumbnail_url : "Not Found"}" class="card-img-top col-sm-8 " alt="...">
+        <img id= "card-image" src="${thumbnail_url ? thumbnail_url : "Not Found"}" class="flex-shrink-0 me-3 " alt="...">
         <div class="card-body col-sm-8 mx-3">
           <h5 class="card-title">${title ? title : 'Not Found'}</h5>
           <p class="card-text">${details ? details.slice(0, 500) + "..." : "Not Found"}</p>
           <div class= "d-flex justify-content-between align-items-center pt-4 ">
 
           <div class= "d-flex flex-row "> 
+                    
                     <div>
-                    <img id="profile-image" src="${img ? img : 'Not Found'}" class="rounded-circle" alt="...">
+                    <img id="image-prof" src="${img ? img : 'Not Found'}" class="rounded-circle img-fluid img-size" alt="...">
                     </div>
+                        
 
                     <div class = "px-2">
                         <h6>${name ? name : 'not found'}</h6>
@@ -86,7 +88,7 @@ const displayCategriOne = (data) => {
           
 
           <div>
-             <h6><i class="fa-regular fa-eye"></i> ${total_view ? total_view : 'not found'}</h6>
+             <h6><i class="fa-regular fa-eye"></i> ${total_view ? total_view : 'not found'} M</h6>
 
           </div>
           <div>
@@ -113,7 +115,16 @@ const displayCategriOne = (data) => {
       `
         cardContainer.appendChild(div);
     });
-    
+    loadingSpinner(false);
+}
+const loadingSpinner = (isload) => {
+    const load = document.getElementById('spinner');
+    if (isload) {
+        load.classList.remove('d-none');
+    }
+    else {
+        load.classList.add('d-none');
+    }
 }
 selectCategory();
 loadAllCategories();
