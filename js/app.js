@@ -171,10 +171,7 @@ const displayModel = (data) =>{
       </div>`
     modalAdd.appendChild(div);
 }
-// const readblogs = () =>{
-//     const getblog = document.getElementById('read-blogs');
-// }
 
-selectCategory();
+selectCategory("08");
 loadAllCategories();
 
