@@ -1,8 +1,12 @@
 const loadAllCategories = async () => {
-    const url = `https://openapi.programming-hero.com/api/news/categories`
-    const res = await fetch(url);
-    const data = await res.json();
+    try {
+        const url = `https://openapi.programming-hero.com/api/news/categories`
+        const res = await fetch(url);
+        const data = await res.json();
     displayCategories(data.data.news_category);
+    } catch (e) {
+        console.log("error!");
+    }
 }
 
 const displayCategories = (categories) => {
@@ -110,7 +114,7 @@ const displayCategriOne = (data, element) => {
 
             </div>
 
-            <div onclick="modalFunction('${_id}')" data-bs-toggle="modal" data-bs-target="#portalModal">
+            <div onclick="loadModel('${_id}')" data-bs-toggle="modal" data-bs-target="#portalModal">
                 <i class="fa-solid fa-arrow-right text-primary"></i>
             </div>
 
